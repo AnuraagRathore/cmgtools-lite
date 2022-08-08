@@ -38,6 +38,7 @@ def fillSliceY(th2,plot1d,yvalue,xslice):
                 print msg, found
 def readSliceY(th2,filename,plotname,yvalue,xslice):
     slicefile = ROOT.TFile.Open(filename)
+    print 'Opening', filename
     if not slicefile: raise RuntimeError, "Cannot open "+filename
     plot = slicefile.Get(plotname)
     if not plot: 
@@ -178,7 +179,7 @@ if __name__ == "__main__":
     ROOT.gStyle.SetOptStat(0)
         
 
-    ptbins_el = [ 15,25,35,45,65,100 ]
+    ptbins_el = [ 15,20,25,35,45,65,100 ]
     ptbins_mu = [ 10,15,20,32,45,65,100 ]
     etabins_el = [0, 1.479, 2.5]
     etabins_mu = [0, 1.2,   2.4]
