@@ -36,8 +36,8 @@ else
     BCORE="${BCORE} --Fs {P}/0_lepmva --Fs {P}/1_OFS"
     BCORE="${BCORE} --mcc ttH-multilepton/mcc-eleIdEmu2.txt  "
 fi
-BASE="python mcEfficiencies.py $BCORE --ytitle 'Fake rate'  --xf QCD_Pt20to30_EMEnriched "
-PLOTTER="python mcPlots.py $BCORE  --xf QCD_Pt20to30_EMEnriched  "
+BASE="python mcEfficiencies.py $BCORE --ytitle 'Fake rate'   "
+PLOTTER="python mcPlots.py $BCORE   "
 
 
 BG=" -j 8 "; if [[ "$1" == "-b" ]]; then BG=" -j 4 & "; shift; fi
@@ -84,7 +84,7 @@ for WP in $WPs; do
 	VETOCONVERSIONS="LepGood_mcPromptGamma==0"
         case $WP in 
             000*) WNUM="0.00" ;; 030*) WNUM="0.30" ;; 060*) WNUM="0.60" ;;
-            075*) WNUM="0.75" ;; 080*) WNUM="0.80" ;; 085*) WNUM="0.85" ;;  090*) WNUM="0.90" ;;
+            075*) WNUM="0.75" ;; 080*) WNUM="0.80" ;; 085*) WNUM="0.85" ;;  0975*) WNUM="0.975" ;; 090*) WNUM="0.90" ;;
 	    sM*) WNUM="if3(abs(LepGood_pdgId)==13,-0.2,0.5)";; sV*) WNUM="if3(abs(LepGood_pdgId)==13,0.45,0.75)";;
         esac
         case $WP in
@@ -122,6 +122,19 @@ for WP in $WPs; do
                        MUEXTRA="LepGood_jetBTagDeepFlav < smoothBFlav(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, year, suberaId) && LepGood_jetRelIso < 0.50";
                        ELEXTRA="LepGood_mvaFall17V2noIso_WP90 && LepGood_jetBTagDeepFlav < smoothBFlav(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, year, suberaId)  && LepGood_jetRelIso < 1."
                        SelDen="-A pt20 den '$SIP8 && $VDFM && PV_ndof > 100 && (LepGood_mvaTTHUL > $WNUM || (abs(LepGood_pdgId)==13 && $MUEXTRA) || (abs(LepGood_pdgId)==11 && $ELEXTRA))'"; Num="mvaULPt_${WP%%i*}"i; XVar="mvaULPt${WP%%i*}";; 
+            0???iRun2v3.0*) 
+                       MuIdDen=1
+                       IDEmu="LepGood_idEmu3"
+                       MUEXTRA="LepGood_jetBTagDeepFlav < smoothBFlav(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, year, suberaId) && LepGood_jetRelIso < 0.50";
+                       ELEXTRA="LepGood_mvaFall17V2noIso_WP90 && LepGood_jetBTagDeepFlav < smoothBFlav(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, year, suberaId)  && LepGood_jetRelIso < 1."
+                       SelDen="-A pt20 den '$SIP8 && $VDFM && PV_ndof > 100 && (LepGood_mvaTTHUL > $WNUM || (abs(LepGood_pdgId)==13 && $MUEXTRA) || (abs(LepGood_pdgId)==11 && $ELEXTRA))'"; Num="mvaULPt_${WP%%i*}"i; XVar="mvaULPt${WP%%i*}";; 
+            0??iRun2v4.0*) 
+                       MuIdDen=1
+                       IDEmu="LepGood_idEmu3"
+                       MUEXTRA="LepGood_jetBTagDeepFlav < smoothBFlav(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, year, suberaId) && LepGood_jetRelIso < 0.50";
+                       ELEXTRA="LepGood_mvaFall17V2noIso_WP90 && LepGood_jetRelIso < 1."
+                       SelDen="-A pt20 den '$SIP8 && $VDFM && PV_ndof > 100 && (LepGood_mvaTTHUL > $WNUM || (abs(LepGood_pdgId)==13 && $MUEXTRA) || (abs(LepGood_pdgId)==11 && $ELEXTRA))'"; Num="mvaULPt_${WP%%i*}"i; XVar="mvaULPt${WP%%i*}";; 
+
  	    RA5*)    SelDen="-A pt20 den '$SIP4'"; MuIdDen=1 ; Num="ra5_tight"; XVar="${WP}";;
 	    RA7*)    SelDen="-A pt20 den '$SIP4 && met_pt<20 && mt_2(LepGood_pt,LepGood_phi,met_pt,met_phi)<20'"; MuIdDen=1 ; MuRecoPt=10; EleRecoPt=10; AwayJetPt=40; Num="ra7_tight"; XVar="${WP}";;
 	    s?i*)   SelDen="-A pt20 den '$SIP8'"; Num="mvaSusy_${WP}" ; XVar="mvaSusy_${WP}";;
@@ -161,8 +174,10 @@ for WP in $WPs; do
 	    *ptJ80*)    ptJI="ptJI80";;
 	    *ptJ85*)    ptJI="ptJI85";;
 	    *ptJ90*)    ptJI="ptJI90";;
+	    *ptJ975*)    ptJI="ptJI90";;
 	    *ptJ95*)    ptJI="ptJI95";;
 	    090*)    ptJI="ptJI90";;
+	    0975*)    ptJI="ptJI90";;
 	    085*)    ptJI="ptJI90";;
 	    080*)    ptJI="ptJI90";;
 	    075*)    ptJI="ptJI90";;

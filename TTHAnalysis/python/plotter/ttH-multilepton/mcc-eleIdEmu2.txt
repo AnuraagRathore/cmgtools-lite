@@ -6,3 +6,13 @@ LepGood_oldIdEmu2: LepGood_hadronicOverEm < (0.10-0.03*(abs(LepGood_etaSc)>1.479
 LepGood(\d)_oldIdEmu2: LepGood\1_hadronicOverEm < (0.10-0.03*(abs(LepGood\1_etaSc)>1.479)) && abs(LepGood\1_dEtaScTrkIn) < (0.01-0.002*(abs(LepGood\1_etaSc)>1.479)) && abs(LepGood\1_dPhiScTrkIn) < (0.04+0.03*(abs(LepGood\1_etaSc)>1.479))  && LepGood\1_eInvMinusPInv > -0.05 && LepGood\1_eInvMinusPInv < (0.01-0.005*(abs(LepGood\1_etaSc)>1.479)) && LepGood\1_sigmaIEtaIEta < (0.011+0.019*(abs(LepGood\1_etaSc)>1.479)) ; AlsoData
 LepGood_oldIdEmu3: LepGood_hadronicOverEm < 0.10 && LepGood_eInvMinusPInv > -0.04 && LepGood_sigmaIEtaIEta < (0.011+0.019*(abs(LepGood_etaSc)>1.479)) ; AlsoData
 LepGood(\d)_oldIdEmu3: LepGood\1_hadronicOverEm < 0.10 && LepGood\1_eInvMinusPInv > -0.04 && LepGood\1_sigmaIEtaIEta < (0.011+0.019*(abs(LepGood\1_etaSc)>1.479)) ; AlsoData
+LepGood_eleCutBasedNoIso_veto : (((LepGood_vidNestedWPBitmap / 512) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 8) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 64) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 4096) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 32768) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 16777216) & 7) >= 1) && (((LepGood_vidNestedWPBitmap / 2097152) & 7) >= 1); AlsoData
+LepGood_eleCutBasedNoIso_loose: (((LepGood_vidNestedWPBitmap / 512) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 8) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 64) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 4096) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 32768) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 16777216) & 7) >= 2) && (((LepGood_vidNestedWPBitmap / 2097152) & 7) >= 2); AlsoData
+LepGood_eleCutBasedNoIso_medium: (((LepGood_vidNestedWPBitmap / 512) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 8) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 64) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 4096) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 32768) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 16777216) & 7) >= 3) && (((LepGood_vidNestedWPBitmap / 2097152) & 7) >= 3); AlsoData
+LepGood_eleCutBasedNoIso_tight : (((LepGood_vidNestedWPBitmap / 512) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 8) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 64) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 4096) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 32768) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 16777216) & 7) >= 4) && (((LepGood_vidNestedWPBitmap / 2097152) & 7) >= 4); AlsoData
+btagcutL: 0.0583; AlsoData, year="2022"
+btagcutM: 0.3086; AlsoData, year="2022"
+btagcutT: 0.7183; AlsoData, year="2022"
+btagcutL: 0.0614; AlsoData, year="2022EE"
+btagcutM: 0.3196; AlsoData, year="2022EE"
+btagcutT: 0.7300; AlsoData, year="2022EE"

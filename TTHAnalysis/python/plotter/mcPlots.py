@@ -101,13 +101,13 @@ def getDataPoissonErrors(h, drawZeroBins=False, drawXbars=False):
     ret.SetName(h.GetName()+"_graph")
     for i,((x,y),(EXlow,EXhigh,EYlow,EYhigh)) in enumerate(zip(points,errors)):
         ret.SetPoint(i, x, y)
-        ret.SetPointError(i, EXlow,EXhigh,EYlow,EYhigh)
+        ret.SetPointError(i, 0., 0.,EYlow,EYhigh)
     ret.SetLineWidth(h.GetLineWidth())
     ret.SetLineColor(h.GetLineColor())
     ret.SetLineStyle(h.GetLineStyle())
-    ret.SetMarkerSize(h.GetMarkerSize())
+    ret.SetMarkerSize(1.5)
     ret.SetMarkerColor(h.GetMarkerColor())
-    ret.SetMarkerStyle(h.GetMarkerStyle())
+    ret.SetMarkerStyle(20)
     return ret
 
 def PrintHisto(h):
@@ -449,7 +449,7 @@ def doRatioHists(pspec,pmap,total,maxRange,fixRange=False,fitRatio=None,errorsOn
     unityErr0.SetFillColor(ROOT.kBlue-7);
     unityErr0.SetMarkerStyle(1);
     unityErr0.SetMarkerColor(ROOT.kBlue-7);
-    ROOT.gStyle.SetErrorX(0.5);
+    ROOT.gStyle.SetErrorX(0.0);
     unity.Draw("AXIS");
     if errorsOnRef:
         unityErr.Draw("E2");
@@ -501,14 +501,14 @@ def doRatioHists(pspec,pmap,total,maxRange,fixRange=False,fitRatio=None,errorsOn
         blist = binlabels.split(",")
         for i in range(1,unity.GetNbinsX()+1): 
             unity.GetXaxis().SetBinLabel(i,blist[i-1]) 
-    #$ROOT.gStyle.SetErrorX(0.0);
+    ROOT.gStyle.SetErrorX(0.0);
     line = ROOT.TLine(unity.GetXaxis().GetXmin(),1,unity.GetXaxis().GetXmax(),1)
     line.SetLineWidth(2);
     line.SetLineColor(58);
     line.Draw("L")
     for ratio in ratios:
         ratio.Draw("E SAME" if ratio.ClassName() != "TGraphAsymmErrors" else "PZ SAME");
-    leg0 = ROOT.TLegend(0.12 if doWide else 0.2, 0.84, 0.25 if doWide else 0.45, 0.94)
+    leg0 = ROOT.TLegend(0.12 if doWide else 0.2, 0.45, 0.2 if doWide else 0.3, 0.4)
     leg0.SetFillColor(0)
     leg0.SetShadowColor(0)
     leg0.SetLineColor(0)
@@ -516,17 +516,17 @@ def doRatioHists(pspec,pmap,total,maxRange,fixRange=False,fitRatio=None,errorsOn
     leg0.SetTextSize(textSize*0.7/0.3)
     leg0.AddEntry(unityErr0, "stat. unc.", "F")
     if showStatTotLegend: leg0.Draw()
-    leg1 = ROOT.TLegend(0.25 if doWide else 0.45, 0.84, 0.38 if doWide else 0.7, 0.94)
-    leg1.SetFillColor(0)
-    leg1.SetShadowColor(0)
-    leg1.SetLineColor(0)
-    leg1.SetTextFont(42)
-    leg1.SetTextSize(textSize*0.7/0.3)
-    leg1.AddEntry(unityErr, "total unc.", "F")
-    if showStatTotLegend: leg1.Draw()
+    # leg1 = ROOT.TLegend(0.25 if doWide else 0.45, 0.84, 0.38 if doWide else 0.7, 0.94)
+    # leg1.SetFillColor(0)
+    # leg1.SetShadowColor(0)
+    # leg1.SetLineColor(0)
+    # leg1.SetTextFont(42)
+    # leg1.SetTextSize(textSize*0.7/0.3)
+    #leg1.AddEntry(unityErr, "total unc.", "F")
+    #if showStatTotLegend: leg1.Draw()
     global legendratio0_, legendratio1_
     legendratio0_ = leg0
-    legendratio1_ = leg1
+    #legendratio1_ = leg1
     return (ratios, unity,(unityErr,unityErr0), line)
 
 def doStatTests(total,data,test,legendCorner):
@@ -612,7 +612,7 @@ def doLegend(pmap,mca,corner="TR",textSize=0.035,cutoff=1e-2,cutoffSignals=True,
         leg.SetNColumns(columns)
         entries = []
         if 'data' in pmap: 
-            entries.append((pmap['data'].raw(), mca.getProcessOption('data','Label','Data', noThrow=True), 'LPE'))
+            entries.append((pmap['data'].raw(), mca.getProcessOption('data','Label','Data', noThrow=True), 'PE'))
         for (plot,label,style) in sigEntries: entries.append((plot.raw(),label,style))
         for (plot,label,style) in  bgEntries: entries.append((plot.raw(),label,style))
         if totalError:  entries.append((totalError,"Total unc.","F"))
@@ -670,6 +670,7 @@ class PlotMaker:
             for pspec in pspecs:
                 print "    plot: ",pspec.name
                 pmap = mca.getPlots(pspec,cut,makeSummary=True,closeTreeAfter=True)
+
                 #
                 # blinding policy
                 blind = pspec.getOption('Blinded','None') if 'data' in pmap else 'None'
@@ -826,7 +827,7 @@ class PlotMaker:
 #                        if plot.Integral() <= 0: continue
                         if mca.isSignal(p): plot.Scale(options.signalPlotScale)
                         if mca.isSignal(p) and options.noStackSig == True: 
-                            plot.SetLineWidth(3)
+                            plot.SetLineWidth(4)
                             plot.SetLineColor(plot.GetFillColor())
                             continue 
                         if plotmode == "stack":
@@ -834,7 +835,7 @@ class PlotMaker:
                             if mytotal == None: total+=plot
                         else:
                             plot.SetLineColor(plot.GetFillColor())
-                            plot.SetLineWidth(3)
+                            plot.SetLineWidth(4)
                             plot.SetFillStyle(0)
                             if plotmode == "norm" and (plot.ClassName()[:2] == "TH"):
                                 ref = pmap['data'].Integral() if 'data' in pmap else 1.0
@@ -844,7 +845,8 @@ class PlotMaker:
                         if self._options.errors and plotmode != "stack":
                             plot.SetMarkerColor(plot.GetFillColor())
                             plot.SetMarkerStyle(21)
-                            plot.SetMarkerSize(1.5)
+                            print 'im here'
+                            plot.SetMarkerSize(2)
                         else:
                             plot.SetMarkerStyle(0)
 
@@ -866,7 +868,8 @@ class PlotMaker:
                 ROOT.gStyle.SetPadLeftMargin(600.*0.18/plotformat[0])
 
                 stack.Draw("GOFF")
-                ytitle = "Events" if not self._options.printBinning else "Events / %s" %(self._options.printBinning)
+                unitBinning = "Number of events / %4.2f %s"%(total.GetBinWidth(1), pspec.getOption("Unit", ""))
+                ytitle = "Events / %s" %(self._options.printBinning) if self._options.printBinning else unitBinning if self._options.unitBinning  else "Events"
                 total.GetXaxis().SetTitleFont(42)
                 total.GetXaxis().SetTitleSize(0.05)
                 total.GetXaxis().SetTitleOffset(1.1)
@@ -927,7 +930,7 @@ class PlotMaker:
                     total.Draw("AXIS SAME")
                 else: 
                     if self._options.errors:
-                        ROOT.gStyle.SetErrorX(0.5)
+                        ROOT.gStyle.SetErrorX(0)
                         stack.Draw("SAME E NOSTACK")
                     else:
                         stack.Draw("SAME HIST NOSTACK")
@@ -939,7 +942,7 @@ class PlotMaker:
                 is2D = total.InheritsFrom("TH2")
                 if 'data' in pmap: 
                     if options.poisson and not is2D:
-                        pdata = getDataPoissonErrors(pmap['data'], True, True)
+                        pdata = getDataPoissonErrors(pmap['data'], True, False)
                         pdata.Draw("PZ SAME")
                         pmap['data'].poissonGraph = pdata ## attach it so it doesn't get deleted
                     else:
@@ -1022,6 +1025,7 @@ class PlotMaker:
                     rdata,rnorm,rnorm2,rline = doRatioHists(pspec,pmap,total, maxRange=options.maxRatioRange, fixRange=options.fixRatioRange,
                                                             fitRatio=options.fitRatio, errorsOnRef=options.errorBandOnRatio, 
                                                             ratioNums=options.ratioNums, ratioDen=options.ratioDen, ylabel=options.ratioYLabel, yndiv=options.ratioYNDiv, doWide=doWide, showStatTotLegend=options.showStatTotLegend, textSize=options.legendFontSize)
+                print("im here1")
                 if self._options.printPlots:
                     for ext in self._options.printPlots.split(","):
                         fdir = printDir;
@@ -1038,8 +1042,8 @@ class PlotMaker:
                             fmt    = "%9.2f +/- %9.2f (stat)"
                             dump.write(fmh % pspec.expr + " " + " ".join("%d" % (i) for i in bins) + "\n")
                             dump.write(("-"*(maxlen+45))+"\n");
-                            bkgsyst = [0 for i in range(pmap["background"].GetNbinsX())]; sigsyst = bkgsyst
-                            for p in mca.listSignals(allProcs=True) + mca.listBackgrounds(allProcs=True) + ["signal", "background"]:
+                            bkgsyst = [0 for i in range(pmap["signal"].GetNbinsX())]; sigsyst = bkgsyst
+                            for p in mca.listSignals(allProcs=True) + mca.listBackgrounds(allProcs=True) + ["signal"]:
                                 if p not in pmap: continue
                                 plot = pmap[p]
                                 if plot.Integral() <= 0: continue
@@ -1116,7 +1120,7 @@ class PlotMaker:
                                     c1.Print("%s/%s_%s.%s" % (fdir, outputName, p, ext))
                                 if "data" in pmap and "TGraph" in pmap["data"].ClassName():
                                     pmap["data"].SetMarkerStyle(mca.getProcessOption('data','MarkerStyle',1))
-                                    pmap["data"].SetMarkerSize(pspec.getOption("MarkerSize",1.6))
+                                    pmap["data"].SetMarkerSize(pspec.getOption("MarkerSize",2.))
                                     for p in ["signal", "background", "total"]:
                                         if p not in pmap: continue
                                         plot = pmap[p]
@@ -1126,6 +1130,7 @@ class PlotMaker:
                                         pmap["data"].Draw("P SAME")
                                         c1.Print("%s/%s_data_%s.%s" % (fdir, outputName, p, ext))
                             else:
+                                print("Printing ",  "%s/%s.%s" % (fdir, outputName, ext))
                                 c1.Print("%s/%s.%s" % (fdir, outputName, ext))
                             ROOT.gErrorIgnoreLevel = savErrorLevel;
                 c1.Close()
@@ -1145,7 +1150,7 @@ def addPlotMakerOptions(parser, addAlsoMCAnalysis=True):
     parser.add_option("--rspam", dest="rspam",   type="string", default="%(lumi) (13 TeV)", help="Spam text on the right hand side");
     parser.add_option("--addspam", dest="addspam", type = "string", default=None, help="Additional spam text on the top left side, in the frame");
     parser.add_option("--topSpamSize", dest="topSpamSize",   type="float", default=1.2, help="Zoom factor for the top spam");
-    parser.add_option("--print", dest="printPlots", type="string", default="png,pdf,txt", help="print out plots in this format or formats (e.g. 'png,pdf,txt')");
+    parser.add_option("--print", dest="printPlots", type="string", default="png,pdf,txt,root", help="print out plots in this format or formats (e.g. 'png,pdf,txt')");
     parser.add_option("--pdir", "--print-dir", dest="printDir", type="string", default="plots", help="print out plots in this directory");
     parser.add_option("--showSigShape", dest="showSigShape", action="store_true", default=False, help="Superimpose a normalized signal shape")
     parser.add_option("--showIndivSigShapes", dest="showIndivSigShapes", action="store_true", default=False, help="Superimpose normalized shapes for each signal individually")
@@ -1197,6 +1202,7 @@ def addPlotMakerOptions(parser, addAlsoMCAnalysis=True):
     parser.add_option("--cmsprel", dest="cmsprel", type="string", default="Preliminary", help="Additional text (Simulation, Preliminary, Internal)")
     parser.add_option("--cmssqrtS", dest="cmssqrtS", type="string", default="13 TeV", help="Sqrt of s to be written in the official CMS text.")
     parser.add_option("--printBin", dest="printBinning", type="string", default=None, help="Write 'Events/xx' instead of 'Events' on the y axis")
+    parser.add_option("--unitBinning", dest="unitBinning", default=False, action="store_true")
 
 if __name__ == "__main__":
     from optparse import OptionParser

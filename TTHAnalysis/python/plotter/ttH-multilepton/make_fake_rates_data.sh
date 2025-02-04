@@ -4,18 +4,18 @@
 T_SUSY="/data1/peruzzi/TREES_80X_011216_Spring16MVA_1lepFR --FDs /data1/peruzzi/frQCDVars_skimdata"
 
 ANALYSIS=$1; if [[ "$1" == "" ]]; then exit 1; fi; shift;
+YEAR=$1; shift
 case $ANALYSIS in
 ttH)
-    YEAR=$1; shift; 
-    YEAR2=$YEAR
-    case $YEAR in 2016) L=35.9;; 2017) L=41.5;; 2018) L=59.7;; 2016APV,2016) L=19.5,16.8 ;; esac
-    case $YEAR2 in 2016APV,2016) T=/pnfs/psi.ch/cms/trivcat/store/user/sesanche/NanoTrees_ULFR_161221/ ;; *) T=/pnfs/psi.ch/cms/trivcat/store/user/sesanche/NanoTrees_ULFR_161221/$YEAR2 ;; esac
-    YEAR=${YEAR/,/_}
-    # add local caches if available
-    test -d /tmp/$USER/TREES_ttH_FR_nano_v5/$YEAR && T="/tmp/$USER/TREES_ttH_FR_nano_v5/$YEAR" ;
-    test -d /data/$USER/TREES_ttH_FR_nano_v5/$YEAR && T="/data/$USER/TREES_ttH_FR_nano_v5/$YEAR" ;
-    # use skim if available
-    #test -d $T/skim_z3 && T=$T/skim_z3
+    L=19.5,16.8
+    case $HOSTNAME in
+        vocms*)
+            T=/data/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
+            ;;
+        lxplus*)
+            T=/eos/cms/store/group/cmst3/group/tthlep/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
+            ;;
+    esac
     echo "echo 'Will read trees from $T'"
     # keep EOS as backup in case local cache is not complete
     #echo $T | grep -q /eos || T="$T -P $T0"
@@ -23,7 +23,7 @@ ttH)
 susy*) echo "NOT UP TO DATE"; exit 1;;
 *) echo "You did not specify the analysis"; exit 1;;
 esac;
-BCORE=" --s2v --tree NanoAOD ttH-multilepton/lepton-fr/mca-qcd1l-${YEAR}.txt ${CUTFILE} -P $T -l $L --AP  --year ${YEAR2} "
+BCORE=" --s2v --tree NanoAOD ttH-multilepton/lepton-fr/mca-qcd1l-${YEAR}.txt ${CUTFILE} -P $T -l $L --AP  --year ${YEAR} " 
 BCORE="${BCORE} -L ttH-multilepton/functionsTTH.cc   "; 
 BCORE="${BCORE} --Fs {P}/1_OFS --Fs {P}/0_lepmva "
 BCORE="${BCORE} --mcc ttH-multilepton/mcc-eleIdEmu2.txt --xf T_tch,TBar_tch,T_tWch_noFullyHad,TBar_tWch_noFullyHad  "; 
@@ -35,10 +35,10 @@ BG=" -j 16 "; if [[ "$1" == "-b" ]]; then BG=" & "; shift; fi
 lepton=$1; if [[ "$1" == "" ]]; then exit 1; fi
 lepdir=${lepton};
 case $lepton in
-mu) BCORE="${BCORE} -E ^${lepton} --xf 'SingleEl.*,DoubleEG.*,EGamma.*'  "; MVAWP=85; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
-    conept="LepGood_pt*if3(LepGood_mvaTTHUL>0.${MVAWP}&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
-el) BCORE="${BCORE} -E ^${lepton} --xf 'DoubleMu.*,SingleMu.*' "; MVAWP=90; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
-    conept="LepGood_pt*if3(LepGood_mvaTTHUL>0.${MVAWP}, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
+mu) BCORE="${BCORE} -E ^${lepton} --xf 'EGamma.*'  "; MVAWP=85; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
+    conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
+el) BCORE="${BCORE} -E ^${lepton} --xf 'DoubleMu.*,SingleMu.*,Muon.*' "; MVAWP=64; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
+    conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
 esac;
 
 trigger=$2; if [[ "$2" == "" ]]; then exit 1; fi
@@ -76,7 +76,7 @@ MuX_OR)
         BCORE="${BCORE} -E ^trigMu  -A 'entry point' conept '10 < $conept && $conept < 100' "; 
     fi;
     CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarsecomb"
-    PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR}($conept,PV_npvsGood)' "
+    PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR/,/_}($conept,PV_npvsGood)' "
     ;;
 Ele8|Ele8_CaloIdM_TrackIdM_PFJet30)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_Ele8_CaloIdM_TrackIdM_PFJet30' -A 'entry point' recoptfortrigger 'LepGood_pt>8 && $conept > 13'  "; 
@@ -93,7 +93,7 @@ Ele23|Ele23_CaloIdM_TrackIdM_PFJet30)
 EleX_OR)
     BCORE="${BCORE} -E ^trigEl -A 'entry point' conept '15 < $conept && $conept < 100'  "; 
     CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarseelcomb"
-    PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR}($conept,PV_npvsGood)' "
+    PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR/,/_}($conept,PV_npvsGood)' "
     ;;
 *)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}'  "; 
@@ -114,7 +114,7 @@ QCDNORM=" $QCDEWKSPLIT --sp WJets,DYJets,Top,${QCD}_.jets --scaleSigToData  "
 QCDFITEWK=" $QCDEWKSPLIT --flp WJets,DYJets,${QCD}_.jets --peg-process DYJets WJets --peg-process ${QCD}_[clg]jets ${QCD}_bjets "
 QCDFITQCD=" $QCDEWKSPLIT --flp WJets,DYJets,${QCD}_.jets --peg-process DYJets WJets --peg-process ${QCD}_[gl]jets WJets --peg-process ${QCD}_cjets ${QCD}_bjets "
 QCDFITALL=" $QCDEWKSPLIT --flp WJets,DYJets,${QCD}_.jets --peg-process DYJets WJets --peg-process ${QCD}_gjets WJets --peg-process ${QCD}_cjets ${QCD}_bjets "
-
+echo $lepton
 case $lepton in
     el) BARREL="00_15"; ENDCAP="15_25"; ETA="1.479";;
     mu) BARREL="00_12"; ENDCAP="12_24"; ETA="1.2";;
@@ -143,8 +143,14 @@ case $what in
         echo "python ttH-multilepton/lepton-fr/frConePtWeights.py coneptw${trigger}_${YEAR} $PBASE/make_fake_rates_xvars.root ${CONEPTVAR}_nvtx  ";
         echo "echo; echo ' ---- Now you should put the normalization and weight into frPuReweight.cc defining a coneptw${trigger}_${YEAR} ----- ' ";
         ;;
-    coneptw-closure)
-        echo "python mcPlots.py -f -j 6 $BCORE $PUW ttH-multilepton/lepton-fr/make_fake_rates_xvars.txt --pdir $PBASE --sP ${CONEPTVAR}_nvtx,$CONEPTVAR,nvtx $EWKONE " 
+    coneptw-coarse)
+        echo "python mcPlots.py -f -j 6 $BCORE ttH-multilepton/lepton-fr/make_fake_rates_xvars.txt --pdir $PBASE --sP ${CONEPTVAR}_nvtx_coarse $EWKONE " 
+        echo "echo; echo; ";
+        echo "python ttH-multilepton/lepton-fr/frConePtWeights.py coneptw${trigger}_${YEAR} $PBASE/make_fake_rates_xvars.root ${CONEPTVAR}_nvtx  ";
+        echo "echo; echo ' ---- Now you should put the normalization and weight into frPuReweight.cc defining a coneptw${trigger}_${YEAR} ----- ' ";
+        ;;
+    coneptw-closurew)
+        echo "python mcPlots.py -f -j 6 $BCORE $PUW ttH-multilepton/lepton-fr/make_fake_rates_xvars.txt --pdir $PBASE --sP ${CONEPTVAR}_nvtx,$CONEPTVAR,nvtx,coneptw $EWKONE " 
         ;;
     mc-yields)
         echo "python mcAnalysis.py -f -j 6 $BCORE $PUW ${EWKSPLIT} --sp 'QCD.*' --fom S/B --fom S/errSB -G " 

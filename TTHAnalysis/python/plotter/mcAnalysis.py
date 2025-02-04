@@ -8,6 +8,7 @@ import pickle, re, random, time
 from copy import copy, deepcopy
 from collections import defaultdict
 from glob import glob
+import ROOT 
 
 _T0 = long(ROOT.gSystem.Now())
 
@@ -68,6 +69,7 @@ class MCAnalysis:
                 suboptions.year = year
                 suboptions.lumi = lumi
                 suboptions.path = [ path  + '/' + year for path in options.path ]
+                print year
                 self._subMcas.append( MCAnalysis(samples, suboptions))
                 for pname,tty in self._subMcas[-1]._allData.iteritems():
                     if pname in self._allData:
@@ -88,7 +90,7 @@ class MCAnalysis:
             rankoffset = len( self._rank )
             return
 
-        if os.path.isfile(samples): 
+        if os.path.isfile(samples):
             self.readMca(open(samples,'r'),options)
         elif os.path.isdir(samples) and options.tree == "NanoAOD":
             options.path = [ samples ]
@@ -109,6 +111,7 @@ class MCAnalysis:
                         ok = False
             if not ok: raise RuntimeError()
     def readMca(self,samples,options,addExtras={},selectProcesses=None):
+        print samples
         field_previous = None
         extra_previous = {}
         for line in samples:
@@ -116,6 +119,7 @@ class MCAnalysis:
             line = re.sub(r"(?<!\\)#.*","",line)  ## regexp black magic: match a # only if not preceded by a \!
             line = line.replace(r"\#","#")        ## and now we just unescape the remaining #'s
             if not line.strip(): continue
+            #print line.rstrip()
             extra = {}
             if ";" in line:
                 (line,more) = line.split(";")[:2]
@@ -206,6 +210,7 @@ class MCAnalysis:
             for p0 in options.filesToExclude:
                 for p in p0.split(","):
                     if re.match(p+"$", field[1]): skipMe = True
+            print field, skipMe
             if selectProcesses and not skipMe:
                 # remove a postfix if it was added
                 pnameOriginal = pname[:-len(extra['PostFix'])] if 'PostFix' in extra else pname

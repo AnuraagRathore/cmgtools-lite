@@ -5,6 +5,7 @@ import os, os.path
 from array import array
 from copy import deepcopy
 
+
 class CutsFile:
     def __init__(self,txtfileOrCuts,options=None,ignoreEmptyOptionsEnforcement=False):
         if not ignoreEmptyOptionsEnforcement:

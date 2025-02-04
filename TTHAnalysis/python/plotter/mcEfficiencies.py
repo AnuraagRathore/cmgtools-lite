@@ -69,6 +69,7 @@ def effFromH2D(h2d,options,uncertainties="CP", customNum=None, name=None):
             
         else:
             ypass,ypassErr, yfail,yfailErr = h2d.GetBinContent(xbin,2),h2d.GetBinError(xbin,2), h2d.GetBinContent(xbin,1),h2d.GetBinError(xbin,1)
+            print h2d.GetName(), ypass, yfail
             yall = ypass+yfail
         if yall <= 0: continue
         if ypass < 0:
@@ -353,6 +354,7 @@ def makeEff(mca,cut,idplot,xvarplot,returnSeparatePassFail=False,notDoProfile="a
             mybins += "*[-0.5,0.5,1.5]"
         else:
             mybins += ",2,-0.5,1.5"
+    print "%s_vs_%s"  % (idplot.name, xvarplot.name)
     pspec = PlotSpec("%s_vs_%s"  % (idplot.name, xvarplot.name), 
                      "%s:%s" % (idplot.expr,xvarplot.expr),
                      mybins,
@@ -370,7 +372,9 @@ def makeEff(mca,cut,idplot,xvarplot,returnSeparatePassFail=False,notDoProfile="a
         if 'data' in report_num and 'background' in report_num:
             makeDataSub(report_num, mca)
         
-    
+    print report
+    for k in report:
+        print report[k], report[k].Integral()
 
     if 'signal' in report and 'background' in report:
         report['total'] = mergePlots(pspec.name+"_total", [ report[s] for s in ('signal','background') ] )

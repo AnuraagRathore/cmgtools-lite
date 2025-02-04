@@ -10,7 +10,7 @@ if __name__ == '__main__':
     if not hmc or not hdata: 
         tfile.ls()
         raise RuntimeError("Can't find histograms in "+filename)
-    if xvar.endswith("_nvtx"):
+    if xvar.endswith("_nvtx") or xvar.endswith("_nvtx_coarse"):
         nbinsx = hdata.GetNbinsX()
         nbinsy = hdata.GetNbinsY()
         ptvals = []

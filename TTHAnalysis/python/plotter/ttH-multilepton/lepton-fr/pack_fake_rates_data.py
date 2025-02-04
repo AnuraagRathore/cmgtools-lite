@@ -21,7 +21,7 @@ def fillSliceY(th2,plot1d,yvalue,xslice):
             found = "Not found!!"
             if "TGraph" in plot1d.ClassName():
                 for i in xrange(plot1d.GetN()):
-                    x,xp,xm = plot1d.GetX()[i], plot1d.GetErrorXhigh(i), plot1d.GetErrorYlow(i)
+                    x,xp,xm = plot1d.GetX()[i], plot1d.GetErrorXhigh(i), plot1d.GetErrorXlow(i)
                     if x-xm <= xval and xval <= x+xp:
                         th2.SetBinContent(xbin,ybin,plot1d.GetY()[i])
                         th2.SetBinError(xbin,ybin,max(plot1d.GetErrorYlow(i),plot1d.GetErrorYhigh(i)))
@@ -38,7 +38,6 @@ def fillSliceY(th2,plot1d,yvalue,xslice):
                 print msg, found
 def readSliceY(th2,filename,plotname,yvalue,xslice):
     slicefile = ROOT.TFile.Open(filename)
-    print 'Opening', filename
     if not slicefile: raise RuntimeError, "Cannot open "+filename
     plot = slicefile.Get(plotname)
     if not plot: 
@@ -168,7 +167,7 @@ if __name__ == "__main__":
     if options.mvaVersionData is None: options.mvaVersionData = options.mvaVersion
     if options.mvaVersionComb is None: options.mvaVersionComb = options.mvaVersion
 
-    years = options.years.split(",")
+    years = [options.years] #.split(",")
 
     PlotOut="%s/%s/fr-comb" % ( options.outdir, options.mvaVersionComb)
 
@@ -179,7 +178,7 @@ if __name__ == "__main__":
     ROOT.gStyle.SetOptStat(0)
         
 
-    ptbins_el = [ 15,20,25,35,45,65,100 ]
+    ptbins_el = [ 15,25,35,45,100 ]
     ptbins_mu = [ 10,15,20,32,45,65,100 ]
     etabins_el = [0, 1.479, 2.5]
     etabins_mu = [0, 1.2,   2.4]
@@ -188,7 +187,7 @@ if __name__ == "__main__":
     XsQ    = [ "QCD", "data_comb" ]
     Xnices = [ "MC QCD", "Data, comb." ]
 
-    mva_el = "090"
+    mva_el = "064"
     mva_mu = "085"
 
     for year in years:
@@ -212,20 +211,20 @@ if __name__ == "__main__":
 
         #### TT MC-truth
         MCPlots = "%s/%s/fr-mc/%s" % ( options.outdir, options.mvaVersionMC, year)
-        ID="iRun2v3.0";
-        XVarBins_mu = "ptJI90_mvaULPt"+mva_mu+"_coarsecomb_%s"
-        XVarBins_el = "ptJI90_mvaULPt"+mva_el+"_coarseelcomb_%s"
-        NumXVarBins_mu = "mvaULPt_"+mva_mu+"i_"+XVarBins_mu
-        NumXVarBins_el = "mvaULPt_"+mva_el+"i_"+XVarBins_el
+        ID="iRun3v1.0";
+        XVarBins_mu = "ptJI90_mvaPt"+mva_mu+"_coarsecomb_%s"
+        XVarBins_el = "ptJI90_mvaPt"+mva_el+"_coarseelcomb_%s"
+        NumXVarBins_mu = "mvaPt_"+mva_mu+"i_"+XVarBins_mu
+        NumXVarBins_el = "mvaPt_"+mva_el+"i_"+XVarBins_el
         TT_mu, TT_el = "TT_SS_red", "TT_SS_redNC_pink"
         readMany2D([TT_mu], h2d_mu_tt, "/".join([MCPlots,  "mu_sum_wp"+mva_mu+ID+"_recJet30_eta_%s.root"]),      NumXVarBins_mu, etaslices_mu, (10,999) )
-        readMany2D([TT_el], h2d_el_tt, "/".join([MCPlots, "el_sum8_wp"+mva_el+ID+"_recJet30_eta_%s.root"]),      NumXVarBins_el, etaslices_el, (15,999) )
+        readMany2D([TT_el], h2d_el_tt, "/".join([MCPlots, "el_sum8_wp"+mva_el+"iRun3v1.0_recJet30_eta_%s.root"]),      NumXVarBins_el, etaslices_el, (15,999) )
         readMany2D([TT_mu], h2d_mu_tt_norm, "/".join([MCPlots, "mu_ttnorm_wp"+mva_mu+ID+"_recJet30_eta_%s.root"]), XVarBins_mu, etaslices_mu, (15,999) ) #NOTA BENE: we skip the 10-15 bin when normalizing
-        readMany2D([TT_el], h2d_el_tt_norm, "/".join([MCPlots, "el_ttnorm_wp"+mva_el+ID+"_recJet30_eta_%s.root"]), XVarBins_el, etaslices_el, (15,999) )
+        readMany2D([TT_el], h2d_el_tt_norm, "/".join([MCPlots, "el_ttnorm_wp"+mva_el+"iRun3v1.0_recJet30_eta_%s.root"]), XVarBins_el, etaslices_el, (15,999) )
 
         h2d_el_mc4cc = [ make2D(outfile,"FR_mva"+mva_el+"_el_MC"+X, ptbins_el, etabins_el) for X in ("QCD","QCDNC") ]
-        readMany2D(["QCDEl_red_El8", "QCDEl_redNC_El8"],  h2d_el_mc4cc, "/".join([MCPlots, "el_sum8_wp"+ mva_el+ID+"_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (15,32) )
-        readMany2D(["QCDEl_red_El17","QCDEl_redNC_El17"], h2d_el_mc4cc, "/".join([MCPlots, "el_sum17_wp"+mva_el+ID+"_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (32,999) )
+        readMany2D(["QCDEl_red_El8", "QCDEl_redNC_El8"],  h2d_el_mc4cc, "/".join([MCPlots, "el_sum8_wp"+ mva_el+"iRun3v1.0_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (15,32) )
+        readMany2D(["QCDEl_red_El17","QCDEl_redNC_El17"], h2d_el_mc4cc, "/".join([MCPlots, "el_sum17_wp"+mva_el+"iRun3v1.0_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (32,999) )
         h2d_el_cc = [ make2D(outfile,"FR_mva"+mva_el+"_el_"+X+"_NC", ptbins_el, etabins_el) for X in XsQ ]
         for hu,hc in zip(h2d_el,h2d_el_cc):
            for ie in xrange(1,len(etabins_el)):

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #from mcPlots import *
 from CMGTools.TTHAnalysis.plotter.mcPlots import *
+from sklearn.metrics import auc
 
 if "/fakeRate_cc.so" not in ROOT.gSystem.GetLibraries():
     ROOT.gROOT.ProcessLine(".L %s/src/CMGTools/TTHAnalysis/python/plotter/fakeRate.cc+" % os.environ['CMSSW_BASE']);
@@ -31,9 +32,16 @@ def hist2ROC1d(hsig,hbg):
     if len(si) == 2: # just one WP + dummy (100%,100%)
         si = [si[0]]; bi = [ bi[0] ]
     bins = len(si)
-    ret = ROOT.TGraph(bins-1)
-    for i in xrange(bins-1):
-        ret.SetPoint(i, bi[i]/sumb, si[i]/sums)
+    rocx=[]; rocy=[]
+    if bins > 1:
+        ret = ROOT.TGraph(bins-1)
+        for i in xrange(bins-1):
+            ret.SetPoint(i, bi[i]/sumb, si[i]/sums)
+            rocx.append(bi[i]/sumb); rocy.append(si[i]/sums)
+        print("AUC is ", auc(rocx, rocy))
+    else:
+        ret = ROOT.TGraph(1)
+        ret.SetPoint(0, bi[0]/sumb, si[0]/sums)
     ret.dim=1
     return ret
 
@@ -159,6 +167,7 @@ def stackRocks(outname,outfile,rocs,xtit,ytit,options):
     doTinyCmsPrelim(hasExpo = False,textSize=(0.033)*options.topSpamSize, options=options)
     c1.Print(outname.replace(".root","")+".png")
     c1.Print(outname.replace(".root","")+".pdf")
+    c1.Print(outname.replace(".root","")+".root")
     outfile.WriteTObject(c1,"roc_canvas")
 
 if __name__ == "__main__":
@@ -179,7 +188,7 @@ if __name__ == "__main__":
     parser.add_option("--groupBy",  dest="groupBy",  default="process",  type="string", help="Group by: variable, process")
     parser.add_option("--nolegend",  dest="nolegend",  action="store_true",  help="Remove the legend")
     parser.add_option("--topSpamSize", dest="topSpamSize",   type="float", default=1.2, help="Zoom factor for the top spam");
-    parser.add_option("--lspam", dest="lspam",   type="string", default="#bf{CMS} #it{Preliminary}", help="Spam text on the right hand side");
+    parser.add_option("--lspam", dest="lspam",   type="string", default="#bf{CMS} #it{Simulation Preliminary}", help="Spam text on the right hand side");
     parser.add_option("--rspam", dest="rspam",   type="string", default="%(lumi) (13 TeV)", help="Spam text on the right hand side");
 
     (options, args) = parser.parse_args()
@@ -195,7 +204,9 @@ if __name__ == "__main__":
     ROOT.gROOT.ProcessLine(".x tdrstyle.cc")
     ROOT.gStyle.SetOptStat(0)
     pmaps = [  mca.getPlots(p,cut,makeSummary=True) for p in plots ]
+    print signals,backgrounds, options.groupBy
     if len(signals+backgrounds)>2 and "variable" in options.groupBy:
+        print "Here", plots
         for ip,plot in enumerate(plots):
             pmap = pmaps[ip]
             rocs = []
@@ -214,7 +225,8 @@ if __name__ == "__main__":
                 if roc.GetN() > 1 and roc.dim == 1 and not plot.getOption("Discrete",False):
                     roc.SetLineColor(color)
                     roc.SetMarkerColor(color)
-                    roc.SetLineWidth(2)
+                    roc.SetLineStyle(plot.getOption("LineStyle",0))
+                    roc.SetLineWidth(4)
                     roc.SetMarkerStyle(0)
                     roc.style = "L"
                 else:
@@ -245,7 +257,8 @@ if __name__ == "__main__":
                 if roc.GetN() > 1 and roc.dim == 1 and not plot.getOption("Discrete",False):
                     roc.SetLineColor(plot.getOption("LineColor",SAFE_COLOR_LIST[i]))
                     roc.SetMarkerColor(plot.getOption("LineColor",SAFE_COLOR_LIST[i]))
-                    roc.SetLineWidth(2)
+                    roc.SetLineStyle(int(plot.getOption("LineStyle",0)))
+                    roc.SetLineWidth(4)
                     roc.SetMarkerStyle(0)
                     roc.style = "L"
                 elif roc.dim == 2 and not plot.getOption("Discrete",False):

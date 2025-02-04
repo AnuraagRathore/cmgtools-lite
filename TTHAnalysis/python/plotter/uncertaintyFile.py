@@ -203,7 +203,11 @@ class UncertaintyFile:
                     for p0 in options.uncertaintiesToSelect:
                         for p in p0.split(","):
                             if re.match(p+"$", field[0]): skipme = False
-                    if skipme: continue
+                    if skipme: 
+                        print 'skipping', field[0]
+                        continue
+                    else:
+                        print 'keeping', field[0]
                 if options and getattr(options,'uncertaintiesToExclude',[]):
                     skipme = False
                     for p0 in options.uncertaintiesToExclude:

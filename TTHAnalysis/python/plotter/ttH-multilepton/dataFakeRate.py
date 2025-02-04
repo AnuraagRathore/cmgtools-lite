@@ -78,6 +78,7 @@ if __name__ == "__main__":
     mca  = MCAnalysis(args[0],options)
     procs = mca.listProcesses()
     cut = CutsFile(args[1],options).allCuts()
+
     ids   = PlotFile(args[2],options).plots()
     xvars = PlotFile(args[3],options).plots()
     fitvarname = args[4]
@@ -457,6 +458,7 @@ if __name__ == "__main__":
                             if what == 'sig' and 'SemiPar' in options.algo: continue
                             shiftrep = {label: hwn.getCentral()}
                             for n,v in nuis[what]:
+                                print n,v 
                                 if n == 'b': continue
                                 for (i,d) in enumerate(["Up","Dn"]):
                                     shiftrep["%s_%s%s"%(label,n,d)] = hwn.getVariation("nuis_%s%s_shape"%(xprefix+what,n))[i]
@@ -495,11 +497,13 @@ if __name__ == "__main__":
                     sim = ROOT.RooSimultaneousOpt(w.pdf("all"), "")
                     nuisanceList = ROOT.RooArgSet()
                     toConstrain = [ (n,0,1) for n in listAllNuisances(reportND) ]
+                    print('check 0', toConstrain)
                     for theta in "theta_sig", "theta_bkg":
                         if theta in options.constrain: toConstrain.append( (theta, 0, 1) )
                     if "fbkg" in options.constrain:
                         toConstrain.append( ("fbkg", fewk, options.sigmaFBkg) )
                     for nuisance, mean, sigma in toConstrain:
+                        print 'check A', nuisance, mean, sigma
                         c = roofit.factory("SimpleGaussianConstraint::%sPdf(%s,%g,%g)" % (nuisance, nuisance, mean, sigma));
                         sim.addExtraConstraint(c)
                         nuisanceList.add(w.var(nuisance))
@@ -581,6 +585,8 @@ if __name__ == "__main__":
                                           df, df)
                     print "MC fake rate: %.4f " % fqcd
                     print "Data fake rate: %.4f +- %.4f " % (f0, df)
+
+
             # now, outside of the loop on the x bins
             if options.algo in ( "fitGlobalSimND", "fitGlobalSemiParND" ):
                 data = combiner.doneUnbinned("data","data")

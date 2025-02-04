@@ -39,6 +39,7 @@ class PlotSpec:
         self.opts = opts
         self.extracut = extracut
         self.logs = {}
+        print self.name, self.expr, self.bins, self.opts
     def hasOption(self,name):
         return (name in self.opts)
     def getOption(self,name,default=None):
@@ -372,7 +373,7 @@ class TreeToYield:
             t = self._tfile.Get(treeName)
             if not t: raise RuntimeError, "Cannot find tree %s in file %s\n" % (treeName, self._fname)
             return t
-    def getSumW(self,expr="genEventSumw",closeFileAfterwards=True):
+    def getSumW(self,expr="genEventSumw_",closeFileAfterwards=True):
         if self._maintty != None: print "WARNING: getSumW called on a non-main TTY"
         varNormList = []
         for var in [None] + self.getVariations():
@@ -516,6 +517,7 @@ class TreeToYield:
                 cut  = scalarToVector(cut)
             (firstEntry, maxEntries) = self._rangeToProcess(fsplit)
             npass = tree.Draw("1",self.adaptExpr(cut,cut=True),"goff", maxEntries, firstEntry);
+            print npass
             return [ npass, sqrt(npass), npass ]
     def _stylePlot(self,plot,spec):
         return stylePlot(plot,spec,self.getOption)
