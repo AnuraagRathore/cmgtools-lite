@@ -8,14 +8,7 @@ YEAR=$1; shift
 case $ANALYSIS in
 ttH)
     L=19.5,16.8
-    case $HOSTNAME in
-        vocms*)
-            T=/data/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
-            ;;
-        lxplus*)
-            T=/eos/cms/store/group/cmst3/group/tthlep/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
-            ;;
-    esac
+    T=/eos/cms/store/group/cmst3/group/tthlep/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
     echo "echo 'Will read trees from $T'"
     # keep EOS as backup in case local cache is not complete
     #echo $T | grep -q /eos || T="$T -P $T0"
@@ -35,9 +28,9 @@ BG=" -j 16 "; if [[ "$1" == "-b" ]]; then BG=" & "; shift; fi
 lepton=$1; if [[ "$1" == "" ]]; then exit 1; fi
 lepdir=${lepton};
 case $lepton in
-mu) BCORE="${BCORE} -E ^${lepton} --xf 'EGamma.*'  "; MVAWP=85; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
+mu) BCORE="${BCORE} -E ^${lepton} --xf 'EGamma.*'  "; MVAWP=64; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
     conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
-el) BCORE="${BCORE} -E ^${lepton} --xf 'DoubleMu.*,SingleMu.*,Muon.*' "; MVAWP=64; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
+el) BCORE="${BCORE} -E ^${lepton} --xf 'DoubleMu.*,SingleMu.*,Muon.*' "; MVAWP=90; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
     conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
 esac;
 
