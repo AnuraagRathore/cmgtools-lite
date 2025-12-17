@@ -7,8 +7,12 @@ ANALYSIS=$1; if [[ "$1" == "" ]]; then exit 1; fi; shift;
 YEAR=$1; shift
 case $ANALYSIS in
 ttH)
-    L=19.5,16.8
-    T=/eos/cms/store/group/cmst3/group/tthlep/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
+    #L=19.5,16.8
+    #L=8.0,26.7 #7.865,26.337
+    L=17.8,9.5 #17.794,9.451
+    #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_Sergio/
+    #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_v2/
+    T=/pool/phedex/userstorage/mobeso/fakerates/
     echo "echo 'Will read trees from $T'"
     # keep EOS as backup in case local cache is not complete
     #echo $T | grep -q /eos || T="$T -P $T0"
@@ -68,7 +72,8 @@ MuX_OR)
     else
         BCORE="${BCORE} -E ^trigMu  -A 'entry point' conept '10 < $conept && $conept < 100' "; 
     fi;
-    CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarsecomb"
+    #CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarsecomb"
+    CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarsecomb_bin"
     PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR/,/_}($conept,PV_npvsGood)' "
     ;;
 Ele8|Ele8_CaloIdM_TrackIdM_PFJet30)
@@ -85,7 +90,8 @@ Ele23|Ele23_CaloIdM_TrackIdM_PFJet30)
     ;;
 EleX_OR)
     BCORE="${BCORE} -E ^trigEl -A 'entry point' conept '15 < $conept && $conept < 100'  "; 
-    CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarseelcomb"
+    #CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarseelcomb"
+    CONEPTVAR="ptJI90_mvaPt0${MVAWP}_coarseelcomb_bin"
     PUW="-L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'coneptw${trigger}_${YEAR/,/_}($conept,PV_npvsGood)' "
     ;;
 *)
@@ -97,7 +103,9 @@ esac;
 
 what=$3;
 more=$4
-PBASE="plots/104X/${ANALYSIS}/lepMVA/v3.0/fr-meas/qcd1l/$lepdir/$YEAR/HLT_$trigger/$what/$more"
+#PBASE="plots/104X/${ANALYSIS}/lepMVA/v3.0/fr-meas/qcd1l/$lepdir/$YEAR/HLT_$trigger/$what/$more"
+PBASE="plots/104X/${ANALYSIS}/lepMVA/v5.0/fr-meas/qcd1l/$lepdir/$YEAR/HLT_$trigger/$what/$more"
+
 
 EWKONE="-p ${QCD}_red,EWK,data"
 EWKSPLIT="-p ${QCD}_red,WJets,DYJets,Top,data"
@@ -139,7 +147,8 @@ case $what in
     coneptw-coarse)
         echo "python mcPlots.py -f -j 6 $BCORE ttH-multilepton/lepton-fr/make_fake_rates_xvars.txt --pdir $PBASE --sP ${CONEPTVAR}_nvtx_coarse $EWKONE " 
         echo "echo; echo; ";
-        echo "python ttH-multilepton/lepton-fr/frConePtWeights.py coneptw${trigger}_${YEAR} $PBASE/make_fake_rates_xvars.root ${CONEPTVAR}_nvtx  ";
+        #echo "python ttH-multilepton/lepton-fr/frConePtWeights.py coneptw${trigger}_${YEAR} $PBASE/make_fake_rates_xvars.root ${CONEPTVAR}_nvtx  ";
+        echo "python ttH-multilepton/lepton-fr/frConePtWeights.py coneptw${trigger}_${YEAR} $PBASE/make_fake_rates_xvars.root ${CONEPTVAR}_nvtx_coarse  ";
         echo "echo; echo ' ---- Now you should put the normalization and weight into frPuReweight.cc defining a coneptw${trigger}_${YEAR} ----- ' ";
         ;;
     coneptw-closurew)
@@ -171,7 +180,8 @@ case $what in
         ;;
     fakerates-*)
         fitVar=${what/fakerates-/}
-        XVAR="ptJI90_mvaPt0${MVAWP}_coarselongbin"
+        #XVAR="ptJI90_mvaPt0${MVAWP}_coarselongbin"
+	XVAR="ptJI90_mvaPt0${MVAWP}_coarselongbin_bin"
         LEGEND=" --legend=TL --fontsize 0.05 --legendWidth 0.4"
         RANGES=" --showRatio  --ratioRange 0.00 2.99 "
         STACK="python ttH-multilepton/lepton-fr/stack_fake_rates_data.py "

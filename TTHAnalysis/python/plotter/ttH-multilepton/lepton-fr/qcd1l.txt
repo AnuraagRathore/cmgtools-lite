@@ -11,7 +11,7 @@ dfM : LepGood_jetBTagDeepFlav < btagcutM
 pvdof : PV_ndof > 100
 
 mu_den_v1p0 : LepGood_mvaTTH_run3 > 0.64 || ( LepGood_jetRelIso < 0.5 && LepGood_jetBTagDeepFlav < smoothBFlav_custom(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, btagcutL, btagcutM)  && LepGood_sip3d < smoothSIP(0.9*LepGood_pt*(1+LepGood_jetRelIso), 2.5,8.0, 15, 45) ) ; Disable=True
-el_den_v1p0 : LepGood_mvaTTH_run3 > 0.9 || ( LepGood_mvaIso > 0.6 && LepGood_jetRelIso < 1.0 ) ; Disable=True
+el_den_v1p0 : LepGood_mvaTTH_run3 > 0.9 || ( LepGood_mvaIso > 0.6 && LepGood_jetRelIso < 0.9 ) ; Disable=True
 
 num_v1p0 : if3( abs(LepGood_pdgId)==11 , LepGood_mvaTTH_run3 > 0.9, LepGood_mediumId > 0 && LepGood_mvaTTH_run3 > 0.64) ; Disable=True
 
@@ -42,3 +42,4 @@ barrel : abs(LepGood_eta) <= (1.2 + 0.279 *(abs(LepGood_pdgId)==11)); Disable=Tr
 #early_runs : run <= 275125
 #awayJetMatch: abs(LepGood_awayJet_eta - Jet_eta) < 0.001 && abs(LepGood_awayJet_pt - Jet_pt) < 0.001
 #awayJetRawPt50 : Jet_rawPt > 80
+

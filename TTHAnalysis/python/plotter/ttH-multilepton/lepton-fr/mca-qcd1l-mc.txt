@@ -21,7 +21,7 @@ QCDMu_ljets: QCD_PT-50to80_MuEnrichedPt5  : xsec : LepGood_genPartFlav != 5 && L
 QCDMu_ljets: QCD_PT-80to120_MuEnrichedPt5 : xsec : LepGood_genPartFlav != 5 && LepGood_genPartFlav != 4 && (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kOrange-3, Label="QCD\#mu\, l\#rightarrowl"
 QCDMu_ljets: QCD_PT-120to170_MuEnrichedPt5: xsec : LepGood_genPartFlav != 5 && LepGood_genPartFlav != 4 && (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kOrange-3, Label="QCD\#mu\, l\#rightarrowl"
 
-#QCDEl_red: QCD_PT_10to30_EMEnriched  : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
+QCDEl_red: QCD_PT_10to30_EMEnriched  : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
 QCDEl_red: QCD_PT_30to50_EMEnriched  : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
 QCDEl_red: QCD_PT_50to80_EMEnriched  : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
 QCDEl_red: QCD_PT_80to120_EMEnriched : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
@@ -30,7 +30,7 @@ QCDEl_red: QCD_PT-20to30_bcToE       : xsec : (LepGood_genPartFlav != 1 && LepGo
 QCDEl_red: QCD_PT-30to80_bcToE       : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
 QCDEl_red: QCD_PT-80to170_bcToE      : xsec : (LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15) ; FillColor=ROOT.kPink-2, Label="QCDe"
 
-#QCDEl_redNC: QCD_PT_10to30_EMEnriched  : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
+QCDEl_redNC: QCD_PT_10to30_EMEnriched  : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
 QCDEl_redNC: QCD_PT_30to50_EMEnriched  : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
 QCDEl_redNC: QCD_PT_50to80_EMEnriched  : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
 QCDEl_redNC: QCD_PT_80to120_EMEnriched : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
@@ -38,7 +38,7 @@ QCDEl_redNC: QCD_PT_120to170_EMEnriched: xsec : LepGood_genPartFlav != 1 && LepG
 QCDEl_redNC: QCD_PT-20to30_bcToE       : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
 QCDEl_redNC: QCD_PT-30to80_bcToE       : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
 QCDEl_redNC: QCD_PT-80to170_bcToE      : xsec : LepGood_genPartFlav != 1 && LepGood_genPartFlav != 15 && LepGood_genPartFlav != 22 ; FillColor=ROOT.kMagenta+1, Label="QCDe no \#gamma"
-#QCDEl_conv: QCD_PT_10to30_EMEnriched   : xsec : LepGood_genPartFlav == 22 ; FillColor=ROOT.kOrange-3, Label="QCDe \#gamma"
+QCDEl_conv: QCD_PT_10to30_EMEnriched   : xsec : LepGood_genPartFlav == 22 ; FillColor=ROOT.kOrange-3, Label="QCDe \#gamma"
 QCDEl_conv: QCD_PT_30to50_EMEnriched   : xsec : LepGood_genPartFlav == 22 ; FillColor=ROOT.kOrange-3, Label="QCDe \#gamma"
 QCDEl_conv: QCD_PT_50to80_EMEnriched   : xsec : LepGood_genPartFlav == 22 ; FillColor=ROOT.kOrange-3, Label="QCDe \#gamma"
 QCDEl_conv: QCD_PT_80to120_EMEnriched  : xsec : LepGood_genPartFlav == 22 ; FillColor=ROOT.kOrange-3, Label="QCDe \#gamma"
