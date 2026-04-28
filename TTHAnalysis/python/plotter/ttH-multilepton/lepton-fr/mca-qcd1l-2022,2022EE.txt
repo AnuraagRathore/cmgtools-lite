@@ -1,0 +1,12 @@
+# vim: syntax=sh
+#Data for 2022
+
+data : SingleMuon_Run2022C+Muon_Run2022C+Muon_Run2022D+DoubleMuon_Run2022C ; FillColor=ROOT.kBlack, Label="Data", years="2022"
+data : EGamma_Run2022C+EGamma_Run2022D; FillColor=ROOT.kBlack, Label="Data", years="2022"
+
+#Data for 2022EE
+data : Muon_Run2022E+Muon_Run2022F+Muon_Run2022G ; FillColor=ROOT.kBlack, Label="Data", years="2022EE"
+data : EGamma_Run2022E+EGamma_Run2022F+EGamma_Run2022G; FillColor=ROOT.kBlack, Label="Data", years="2022EE"
+
+#incl_mc : + ; IncludeMca="ttH-multilepton/lepton-fr/mca-qcd1l-mc.txt"
+incl_mc : + ; IncludeMca="ttH-multilepton/lepton-fr/mca-qcd1l-mc.txt"

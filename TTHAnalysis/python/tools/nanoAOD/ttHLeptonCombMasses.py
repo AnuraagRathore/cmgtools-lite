@@ -70,3 +70,18 @@ class ttHLeptonCombMasses( Module ):
     
         return True
 
+
+def _lepgood_sel_all(l):
+    return True
+
+class ttHLeptonCombMasses_default(ttHLeptonCombMasses):
+    def __init__(self):
+        ttHLeptonCombMasses.__init__(
+            self,
+            leptonsAndSels=[
+                ("LepGood", _lepgood_sel_all),
+            ],
+            maxLeps=None,
+            postfix=""
+        )
+

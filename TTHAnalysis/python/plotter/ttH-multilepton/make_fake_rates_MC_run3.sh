@@ -7,15 +7,8 @@ case $ANALYSIS in
 ttH) 
     YEAR=$1; shift; 
     L=19.5,16.8
-    case $HOSTNAME in
-        vocms*)
-            T=/data/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
-            ;;
-        lxplus*)
-            T=/eos/cms/store/group/cmst3/group/tthlep/sesanche/NanoTrees_forCMGRDF_100524_summerstudent_frqcd/
-            ;;
-    esac
-                                                                           
+    #L=8.0,26.7
+    T="/pool/phedex/userstorage/mobeso/fakerates/" 
     PBASE="plots/run3/${ANALYSIS}/lepMVA/v1.1/fr-mc/$YEAR"
     TREE="NanoAOD";
     ;;
@@ -31,7 +24,7 @@ if [[ "$TREE" == "treeProducerSusyMultilepton" ]]; then
     BCORE="${BCORE} --mcc ttH-multilepton/validation/mcc-cmg_as_nanoaod.txt"
     BCORE="${BCORE} --mcc ttH-multilepton/mcc-eleIdEmu2.txt  "
 else
-    BCORE="${BCORE} --Fs {P}/1_frFriends_v1"
+    BCORE="${BCORE} --Fs {P}/1_frFriends_v2"
     BCORE="${BCORE} --mcc ttH-multilepton/mcc-eleIdEmu2.txt  "
 fi
 BASE="python mcEfficiencies.py $BCORE --ytitle 'Fake rate'   "
