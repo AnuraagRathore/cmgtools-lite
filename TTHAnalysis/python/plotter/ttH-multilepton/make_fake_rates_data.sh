@@ -8,21 +8,26 @@ YEAR=$1; shift
 case $ANALYSIS in
 ttH)
     #L=19.5,16.8
+    L=108 #2024
     #L=8.0,26.7 #7.865,26.337
-    L=17.8,9.5 #17.794,9.451
+    #L=17.8,9.5 #17.794,9.451
     #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_Sergio/
     #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_v2/
-    T=/pool/phedex/userstorage/mobeso/fakerates/
+    #T=/pool/phedex/userstorage/mobeso/fakerates/
+    #T="/eos/cms/store/group/phys_higgs/mobesome/fakerates/"
+    T="/eos/cms/store/group/phys_smp/arathore/dps/skims/frqcd/2024/new"
     echo "echo 'Will read trees from $T'"
     # keep EOS as backup in case local cache is not complete
     #echo $T | grep -q /eos || T="$T -P $T0"
-    CUTFILE="ttH-multilepton/lepton-fr/qcd1l.txt"; ;;
+    #CUTFILE="ttH-multilepton/lepton-fr/qcd1l.txt"; ;;
+    CUTFILE="ttH-multilepton/lepton-fr/qcd1l_2024.txt"; ;;
+
 susy*) echo "NOT UP TO DATE"; exit 1;;
 *) echo "You did not specify the analysis"; exit 1;;
 esac;
 BCORE=" --s2v --tree NanoAOD ttH-multilepton/lepton-fr/mca-qcd1l-${YEAR}.txt ${CUTFILE} -P $T -l $L --AP  --year ${YEAR} " 
 BCORE="${BCORE} -L ttH-multilepton/functionsTTH.cc   "; 
-BCORE="${BCORE} --Fs {P}/1_OFS --Fs {P}/0_lepmva "
+#BCORE="${BCORE} --Fs {P}/1_frFriends_v2 "
 BCORE="${BCORE} --mcc ttH-multilepton/mcc-eleIdEmu2.txt --xf T_tch,TBar_tch,T_tWch_noFullyHad,TBar_tWch_noFullyHad  "; 
 
 
@@ -32,9 +37,9 @@ BG=" -j 16 "; if [[ "$1" == "-b" ]]; then BG=" & "; shift; fi
 lepton=$1; if [[ "$1" == "" ]]; then exit 1; fi
 lepdir=${lepton};
 case $lepton in
-mu) BCORE="${BCORE} -E ^${lepton} --xf 'EGamma.*'  "; MVAWP=64; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
+mu) BCORE="${BCORE} -E ^${lepton} --xf 'EGamma*'  "; MVAWP=70; NUM="mvaPt_0${MVAWP}i"; QCD=QCDMu; 
     conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
-el) BCORE="${BCORE} -E ^${lepton} --xf 'DoubleMu.*,SingleMu.*,Muon.*' "; MVAWP=90; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
+el) BCORE="${BCORE} -E ^${lepton} --xf 'Muon*' "; MVAWP=90; NUM="mvaPt_0${MVAWP}i"; QCD=QCDEl; 
     conept="LepGood_pt*if3(LepGood_mvaTTH_run3>0.${MVAWP}, 1.0, 0.9*(1+LepGood_jetRelIso))"; ;;
 esac;
 
@@ -53,6 +58,11 @@ Mu17)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>17 && $conept > 25' "; 
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
     ;;
+
+Mu19)
+    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>19 && $conept > 27' ";
+    PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
+    ;;
 Mu20)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>20 && $conept > 30' "; 
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
@@ -61,10 +71,10 @@ Mu27)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>27 && $conept > 40' "; 
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
     ;;
-#Mu50)
-#    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>50 && $conept > 75' "; 
-#    PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
-#    ;;
+Mu50)
+    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>50 && $conept > 75' "; 
+    PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
+    ;;
 MuX_OR)
     regex=".*2016.*"
     if [[ "$YEAR" =~ $regex ]] ; then

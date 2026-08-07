@@ -139,7 +139,7 @@ if __name__ == "__main__":
     import os.path
     from optparse import OptionParser
     parser = OptionParser(usage="%prog [options] path out")
-    parser.add_option("--pdir", dest="outdir", default="plots/run3/ttH/lepMVA/", help="Output base directory for plots");
+    parser.add_option("--pdir", dest="outdir", default="plots/104X/ttH/lepMVA/", help="Output base directory for plots");
     parser.add_option("--xcut", dest="xcut", default=None, nargs=2, type='float', help="X axis cut");
     parser.add_option("--xrange", dest="xrange", default=None, nargs=2, type='float', help="X axis range");
     parser.add_option("--yrange", dest="yrange", default=(0,0.45), nargs=2, type='float', help="Y axis range");
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     parser.add_option("--fix-last-bin", dest="fixLastBin", action="store_true", default=False, help="Fudge last bin")
     parser.add_option("--norm", dest="norm", action="store_true", default=False, help="Normalize variations")
-    parser.add_option("--mva-version",  dest="mvaVersion",  default="v1.1",  type="string", help="MVA version (common)")
+    parser.add_option("--mva-version",  dest="mvaVersion",  default="v7.0",  type="string", help="MVA version (common)")
     parser.add_option("--mva-version-mc",   dest="mvaVersionMC",  default=None,  type="string", help="MC MVA version (fr-mc), defaults to common")
     parser.add_option("--mva-version-data", dest="mvaVersionData",  default=None,  type="string", help="Data MVA version (fr-meas), defaults to common")
     parser.add_option("--mva-version-comb", dest="mvaVersionComb",  default=None,  type="string", help="Comb MVA version (fr-comb), defaults to common")
@@ -189,7 +189,7 @@ if __name__ == "__main__":
 
     #mva_el = "064"
     #mva_mu = "085"
-    mva_mu = "064"
+    mva_mu = "070"
     mva_el = "090"
 
     for year in years:
@@ -210,23 +210,27 @@ if __name__ == "__main__":
         if options.fixLastBin:
             fixLastBin(-1, h2d_el[1], h2d_el[0])
             fixLastBin(-1, h2d_mu[1], h2d_mu[0])
-
+	"""
         #### TT MC-truth
-        MCPlots = "%s/%s/fr-mc/%s" % ( options.outdir, options.mvaVersionMC, year)
-        ID="iRun3v3.0";
+        #MCPlots = "%s/%s/fr-mc/%s" % ( options.outdir, options.mvaVersionMC, year)
+        MCPlots = "plots/run3/ttH/lepMVA/v1.1/fr-mc/%s" % year
+	ID="iRun3v1.0f60E3";
+	#ID="iv01f60E3";
+	#ID="iRun3v3.0";
         XVarBins_mu = "ptJI90_mvaPt"+mva_mu+"_coarsecomb_%s"
         XVarBins_el = "ptJI90_mvaPt"+mva_el+"_coarseelcomb_%s"
         NumXVarBins_mu = "mvaPt_"+mva_mu+"i_"+XVarBins_mu
         NumXVarBins_el = "mvaPt_"+mva_el+"i_"+XVarBins_el
         TT_mu, TT_el = "TT_SS_red", "TT_SS_redNC_pink"
-        readMany2D([TT_mu], h2d_mu_tt, "/".join([MCPlots,  "mu_sum_wp"+mva_mu+ID+"_recJet30_eta_%s.root"]),      NumXVarBins_mu, etaslices_mu, (10,999) )
-        readMany2D([TT_el], h2d_el_tt, "/".join([MCPlots, "el_sum8_wp"+mva_el+"iRun3v3.0_recJet30_eta_%s.root"]),      NumXVarBins_el, etaslices_el, (15,999) )
+        #TT_mu, TT_el = "QCD", "QCD"
+	readMany2D([TT_mu], h2d_mu_tt, "/".join([MCPlots,  "mu_sum_wp"+mva_mu+ID+"_recJet30_eta_%s.root"]),      NumXVarBins_mu, etaslices_mu, (10,999) )
+        readMany2D([TT_el], h2d_el_tt, "/".join([MCPlots, "el_sum8_wp"+mva_el+ID+"_recJet30_eta_%s.root"]),      NumXVarBins_el, etaslices_el, (15,999) )
         readMany2D([TT_mu], h2d_mu_tt_norm, "/".join([MCPlots, "mu_ttnorm_wp"+mva_mu+ID+"_recJet30_eta_%s.root"]), XVarBins_mu, etaslices_mu, (15,999) ) #NOTA BENE: we skip the 10-15 bin when normalizing
-        readMany2D([TT_el], h2d_el_tt_norm, "/".join([MCPlots, "el_ttnorm_wp"+mva_el+"iRun3v3.0_recJet30_eta_%s.root"]), XVarBins_el, etaslices_el, (15,999) )
+        readMany2D([TT_el], h2d_el_tt_norm, "/".join([MCPlots, "el_ttnorm_wp"+mva_el+ID+"_recJet30_eta_%s.root"]), XVarBins_el, etaslices_el, (15,999) )
 
         h2d_el_mc4cc = [ make2D(outfile,"FR_mva"+mva_el+"_el_MC"+X, ptbins_el, etabins_el) for X in ("QCD","QCDNC") ]
-        readMany2D(["QCDEl_red_El8", "QCDEl_redNC_El8"],  h2d_el_mc4cc, "/".join([MCPlots, "el_sum8_wp"+ mva_el+"iRun3v3.0_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (15,32) )
-        readMany2D(["QCDEl_red_El17","QCDEl_redNC_El17"], h2d_el_mc4cc, "/".join([MCPlots, "el_sum17_wp"+mva_el+"iRun3v3.0_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (32,999) )
+        readMany2D(["QCDEl_red_El8", "QCDEl_redNC_El8"],  h2d_el_mc4cc, "/".join([MCPlots, "el_sum8_wp"+ mva_el+ID+"_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (15,32) )
+        readMany2D(["QCDEl_red_El17","QCDEl_redNC_El17"], h2d_el_mc4cc, "/".join([MCPlots, "el_sum17_wp"+mva_el+ID+"_recJet30_eta_%s.root"]), NumXVarBins_el, etaslices_el, (32,999) )
         h2d_el_cc = [ make2D(outfile,"FR_mva"+mva_el+"_el_"+X+"_NC", ptbins_el, etabins_el) for X in XsQ ]
         for hu,hc in zip(h2d_el,h2d_el_cc):
            for ie in xrange(1,len(etabins_el)):
@@ -268,6 +272,9 @@ if __name__ == "__main__":
            for v in mcttvariants: outfile.WriteTObject(v, v.GetName())
            mcvariants = makeVariants(h2d[-2],h2d[-1],norm=(h2tt_norm[0] if options.norm else None))
            for v in mcvariants: outfile.WriteTObject(v, v.GetName())
-
-        outfile.Close()
+	"""
+        for h in h2d_el + h2d_mu:
+    		outfile.WriteTObject(h)
+	
+	outfile.Close()
         print "Saved FR for year %s in %s" % (year, outname)

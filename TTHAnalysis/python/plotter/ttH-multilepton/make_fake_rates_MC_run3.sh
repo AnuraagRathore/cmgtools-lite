@@ -6,9 +6,10 @@ ANALYSIS=$1; if [[ "$1" == "" ]]; then exit 1; fi; shift;
 case $ANALYSIS in
 ttH) 
     YEAR=$1; shift; 
-    L=19.5,16.8
-    #L=8.0,26.7
-    T="/pool/phedex/userstorage/mobeso/fakerates/" 
+   # L=19.5,16.8
+    L=8.0,26.7
+    #T="/pool/phedex/userstorage/mobeso/fakerates/" 
+    T="/eos/cms/store/group/phys_higgs/mobesome/fakerates/"
     PBASE="plots/run3/${ANALYSIS}/lepMVA/v1.1/fr-mc/$YEAR"
     TREE="NanoAOD";
     ;;
