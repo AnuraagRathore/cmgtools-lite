@@ -18,13 +18,13 @@ pvdof : PV_ndof > 100
 mu_den_v1p0 : LepGood_mvaTTH_run3 > 0.7 || ( LepGood_jetRelIso < 0.5 && LepGood_jetBTagDeepFlav < smoothBFlav_custom(0.9*LepGood_pt*(1+LepGood_jetRelIso), 20, 45, btagcutL, btagcutM)  && LepGood_sip3d < smoothSIP(0.9*LepGood_pt*(1+LepGood_jetRelIso), 2.5,8.0, 15, 45) ) ; Disable=True
 el_den_v1p0 : LepGood_mvaTTH_run3 > 0.9 || ( LepGood_mvaIso > 0.6 && LepGood_jetRelIso < 0.9 ) ; Disable=True
 
-num_v1p0 : if3( abs(LepGood_pdgId)==11 , LepGood_mvaTTH_run3 > 0.9, LepGood_mediumId > 0 && LepGood_mvaTTH_run3 > 0.64) ; Disable=True
+num_v1p0 : if3( abs(LepGood_pdgId)==11 , LepGood_mvaTTH_run3 > 0.9, LepGood_mediumId > 0 && LepGood_mvaTTH_run3 > 0.7) ; Disable=True
 
 wSel : mt_2(PuppiMET_pt,PuppiMET_phi,LepGood_pt,LepGood_phi) > 50; Disable=True
 
 pt10 : LepGood_pt > 10; Disable=True
 
-trigMu   : ( HLT_Mu3_PFJet40 && LepGood_awayJet_pt > 45 && LepGood_pt*if3(LepGood_mvaTTH_run3>0.64&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso)) < 32  ) || \
+trigMu   : ( HLT_Mu3_PFJet40 && LepGood_awayJet_pt > 45 && LepGood_pt*if3(LepGood_mvaTTH_run3>0.7&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso)) < 32  ) || \
 	   ( HLT_Mu8  && LepGood_pt >  8 && LepGood_pt*if3(LepGood_mvaTTH_run3>0.7&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso)) > 15 ) || \
            ( HLT_Mu17 && LepGood_pt > 17 && LepGood_pt*if3(LepGood_mvaTTH_run3>0.7&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso)) > 32 ) || \
            ( HLT_Mu19 && LepGood_pt > 19 && LepGood_pt*if3(LepGood_mvaTTH_run3>0.7&&LepGood_mediumId>0, 1.0, 0.9*(1+LepGood_jetRelIso)) > 32 ) || \
