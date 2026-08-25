@@ -28,3 +28,6 @@ btagcutT: 0.6563; AlsoData, year="2023BPix"
 btagcutL: 0.048; AlsoData, year="2024"
 btagcutM: 0.2435; AlsoData, year="2024"       # now using the same for 23 and 24, as suggested by Ankita
 btagcutT: 0.6563; AlsoData, year="2024"
+btagcutL: 0.048; AlsoData, year="2025"
+btagcutM: 0.2435; AlsoData, year="2025"       # and 25 for now as well
+btagcutT: 0.6563; AlsoData, year="2025"

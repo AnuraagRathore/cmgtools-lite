@@ -934,8 +934,8 @@ class PlotMaker:
                         stack.Draw("SAME E NOSTACK")
                     else:
                         stack.Draw("SAME HIST NOSTACK")
-                if pspec.getOption('MoreY',1.0) > 1.0:
-                    total.SetMaximum(pspec.getOption('MoreY',1.0)*total.GetMaximum())
+                #if pspec.getOption('MoreY',1.0) > 1.0:
+                 #   total.SetMaximum(pspec.getOption('MoreY',1.0)*total.GetMaximum())
                 totalError=None
                 if options.showMCError:
                     totalError = doShadedUncertainty(total)
@@ -948,6 +948,10 @@ class PlotMaker:
                     else:
                         pmap['data'].Draw("E SAME")
                     reMax(total,pmap['data'],islog,doWide=doWide)
+		    if pspec.getOption('MoreY',1.0) > 1.0:
+		    	total.SetMaximum(
+				pspec.getOption('MoreY',1.0) * total.GetMaximum()
+			)
                     if xblind[0] < xblind[1]:
                         blindbox = ROOT.TBox(xblind[0],total.GetYaxis().GetXmin(),xblind[1],total.GetMaximum())
                         blindbox.SetFillColor(ROOT.kBlue+3)
@@ -1200,7 +1204,7 @@ def addPlotMakerOptions(parser, addAlsoMCAnalysis=True):
     parser.add_option("--ratioOffset", dest="ratioOffset", type="float", default=0.0, help="Put an offset between ratio and main pad")
     parser.add_option("--noCms", dest="doOfficialCMS", action="store_false", default=True, help="Use official tool to write CMS spam")
     parser.add_option("--cmsprel", dest="cmsprel", type="string", default="Preliminary", help="Additional text (Simulation, Preliminary, Internal)")
-    parser.add_option("--cmssqrtS", dest="cmssqrtS", type="string", default="13 TeV", help="Sqrt of s to be written in the official CMS text.")
+    parser.add_option("--cmssqrtS", dest="cmssqrtS", type="string", default="13.6 TeV", help="Sqrt of s to be written in the official CMS text.")
     parser.add_option("--printBin", dest="printBinning", type="string", default=None, help="Write 'Events/xx' instead of 'Events' on the y axis")
     parser.add_option("--unitBinning", dest="unitBinning", default=False, action="store_true")
 

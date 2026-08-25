@@ -1,0 +1,9 @@
+# vim: syntax=sh
+#Data for 2022
+
+data : Muon0_Run2025C_1+Muon0_Run2025C_2+Muon0_Run2025D+Muon0_Run2025E+Muon0_Run2025F_1+Muon0_Run2025F_2+Muon0_Run2025G+Muon1_Run2025C_1+Muon1_Run2025C_2+Muon1_Run2025D+Muon1_Run2025E+Muon1_Run2025F_1+Muon1_Run2025F_2+Muon1_Run2025G ; FillColor=ROOT.kBlack, Label="Data", years="2025"
+data : EGamma0_Run2025C_1+EGamma0_Run2025C_2+EGamma0_Run2025D+EGamma0_Run2025E+EGamma0_Run2025F_1+EGamma0_Run2025F_2+EGamma0_Run2025G+EGamma1_Run2025C_1+EGamma1_Run2025C_2+EGamma1_Run2025D+EGamma1_Run2025E+EGamma1_Run2025F_1+EGamma1_Run2025F_2+EGamma1_Run2025G  ; FillColor=ROOT.kBlack, Label="Data", years="2025"
+
+
+#incl_mc : + ; IncludeMca="ttH-multilepton/lepton-fr/mca-qcd1l-mc.txt"
+incl_mc : + ; IncludeMca="ttH-multilepton/lepton-fr/mca-qcd1l-mc24.txt"
