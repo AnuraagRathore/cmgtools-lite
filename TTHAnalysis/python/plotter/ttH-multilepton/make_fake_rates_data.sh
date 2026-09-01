@@ -8,14 +8,15 @@ YEAR=$1; shift
 case $ANALYSIS in
 ttH)
     #L=19.5,16.8
-    L=109.7 #2024
+    #L=109.7 #2024
+    L=110 #2025
     #L=8.0,26.7 #7.865,26.337
     #L=17.8,9.5 #17.794,9.451
     #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_Sergio/
     #T=/lustrefs/hdd_pool_dir/nanoAODv12/ttX-run3/post_v2/QCD_FR_v2/
     #T=/pool/phedex/userstorage/mobeso/fakerates/
     #T="/eos/cms/store/group/phys_higgs/mobesome/fakerates/"
-    T="/eos/cms/store/group/phys_smp/arathore/dps/skims/frqcd/2024/"
+    T="/eos/cms/store/group/phys_smp/arathore/dps/skims/frqcd/2025/"
     #T="/eos/cms/store/group/phys_smp/arathore/dps/skims/frqcd/2024/new"
     echo "echo 'Will read trees from $T'"
     # keep EOS as backup in case local cache is not complete
@@ -60,10 +61,10 @@ Mu17)
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
     ;;
 
-Mu19)
-    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>19 && $conept > 27' ";
-    PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
-    ;;
+#Mu19)
+#    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>19 && $conept > 27' ";
+ #   PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
+  #  ;;
 Mu20)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>20 && $conept > 30' "; 
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
@@ -72,10 +73,10 @@ Mu27)
     BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>27 && $conept > 40' "; 
     PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
     ;;
-Mu50)
-    BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>50 && $conept > 75' "; 
-    PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
-    ;;
+#Mu50)
+ #   BCORE="${BCORE} -A 'entry point' trigger 'HLT_${trigger}' -A 'entry point' recoptfortrigger 'LepGood_pt>50 && $conept > 75' "; 
+ #   PUW=" -L ttH-multilepton/lepton-fr/frPuReweight.cc -W 'puw${trigger}_${YEAR}(PV_npvsGood)' "
+ #   ;;
 MuX_OR)
     regex=".*2016.*"
     if [[ "$YEAR" =~ $regex ]] ; then
